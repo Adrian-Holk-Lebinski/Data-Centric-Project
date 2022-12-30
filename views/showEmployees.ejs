@@ -1,0 +1,28 @@
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Salary</th>
+        <th>Update</th>
+    </tr>
+    <% employees.forEach((employee)=> { %>
+        <tr>
+            <td>
+                <%= employee.eid %>
+            </td>
+            <td>
+                <%= employee.ename %>
+            </td>
+            <td>
+                <%= employee.role %>
+            </td>
+            <td>
+                <%= employee.salary %>
+            </td>
+            <td>
+                <a href="http://localhost:3000/employees/edit/<%= employee.eid %>">Update</a>
+            </td>
+        </tr>
+        <% }) %>
+</table>

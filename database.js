@@ -15,7 +15,7 @@ pmysql.createPool({
     })
 
 module.exports = {
-    getEmployees: function () {
+    getEmployees: async function () {
         return new Promise((resolve, reject) => {
             pool.query('SELECT * FROM employee')
                 .then((data) => {

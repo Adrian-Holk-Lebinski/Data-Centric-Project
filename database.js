@@ -26,9 +26,36 @@ module.exports = {
                 })
         })
     },
-    editEmployee: function (eid) {
+    editEmployee: function (eid, data) {
         return new Promise((resolve, reject) => {
-            pool.query(`DELETE FROM employee WHERE eid like(\"${eid}\")`)
+            pool.query(`UPDATE employee SET
+            ename = '${data.ename}',
+            role = '${data.role}',
+            salary = ${data.salary}
+            WHERE eid LIKE(\"${eid}\")`)
+                .then((data) => {
+                    resolve(data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
+
+    },
+    getDepartments: function () {
+        return new Promise((resolve, reject) => {
+            pool.query('SELECT * FROM dept')
+                .then((data) => {
+                    resolve(data)
+                })
+                .catch(error => {
+                    reject(error)
+                })
+        })
+    },
+    deleteDepartment: function (did) {
+        return new Promise((resolve, reject) => {
+            pool.query(`DELETE FROM dept WHERE did like(\"${did}\")`)
                 .then((data) => {
                     resolve(data)
                 })

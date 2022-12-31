@@ -28,8 +28,8 @@ app.use(function (req, res, next) {
 app.get("/", (req, res) => {
     res.send(
         `
-        <a href="http://localhost:${port}/employees">Employees</a>
-        <a href="http://localhost:${port}/employees">Departments</a>
+        <a href="http://localhost:${port}/employees">Employees</a><br/>
+        <a href="http://localhost:${port}/depts">Departments</a><br/>
         <a href="http://localhost:${port}/employees">Employees(MongoDB)</a>
         `
     )
@@ -37,8 +37,8 @@ app.get("/", (req, res) => {
 
 app.get("/employees", (req, res) => {
     database.getEmployees()
-    .then((data) => {
-        res.render("showEmployees", {"employees": data})
+    .then((employees) => {
+        res.render("showEmployees", {"employees": employees})
 
     })
     .catch((error) => {
@@ -47,15 +47,55 @@ app.get("/employees", (req, res) => {
 })
 
 app.get("/employees/edit/:eid", (req, res) => {
-    console.log(req.params.eid)
-    database.editEmployee(req.params.eid)
-    .then((data) => {
-        res.redirect("/")
+    database.getEmployees()
+    .then((employees) => {
+        employees.forEach(employee => {
+            if(req.params.eid == employee.eid){
+                res.render("edit", {"employee": employee})
+            }
+        });
+
     })
     .catch((error) => {
-        res.send(`<h1>Could not edit employee ${req.params.eid} since there is a foreign key constraint</h1>`)
-        console.log(error)
+        console.log("pool error " + error)
     })
 })
+
+app.post("/employees/edit/:eid", (req, res) => {
+    database.editEmployee(req.params.eid, req.body )
+    .then((data) => {
+        res.redirect("/employees")
+    })
+    .catch((error) => {
+        res.send(error)
+    })
+})
+
+app.get("/depts", (req, res) => {
+    database.getDepartments()
+    .then((departments) => {
+        res.render("showDepartments", {"departments": departments})
+
+    })
+    .catch((error) => {
+        console.log("pool error " + error)
+    })
+})
+
+app.get("/depts/delete/:did", (req, res) => {
+    database.deleteDepartment(req.params.did)
+    .then((data) => {
+    res.redirect("/depts")
+    })
+    .catch((error) => {
+        console.log(error)
+        res.send(`
+        <h1>Could not remove department ${req.params.sid} since there is employees assigned to it!</h1>
+        <a href="http://localhost:${port}/depts">Back</a>
+        `)
+    })
+})
+
+
 
 app.listen(port, () => console.log(`Visit http://localhost:${port}`))

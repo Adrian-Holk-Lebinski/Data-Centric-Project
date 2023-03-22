@@ -4,7 +4,6 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const ejs = require('ejs');
-const path = require('path');
 const bodyParser = require('body-parser');
 
 const port = 3000;
@@ -14,7 +13,7 @@ const app = express();
 main().catch(err => console.log(err));
 async function main() {
     await mongoose.connect('mongodb://localhost:27017/employeesDB');
-}
+} 
 
 //define a schema for employees in mongoose
 const employeeSchema = new mongoose.Schema({
@@ -40,7 +39,7 @@ app.use(function (req, res, next) {
         "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-
+ 
 //HOME PAGE
 app.get("/", (req, res) => {
     res.send(
